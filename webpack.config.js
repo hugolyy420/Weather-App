@@ -5,7 +5,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/UI.js',
+  entry: './src/handler.js',
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',

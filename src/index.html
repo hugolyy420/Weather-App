@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
   </head>
+  <header class="header">
+    <span>Weatherly</span> <i class="wi wi-day-sunny"></i>
+    <form action="">
+      <input type="" class="search-bar" />
+      <input type="submit" class="submit-button" />
+    </form>
+    <button class="celsius-fahrenheit">C/F</button>
+  </header>
   <body>
     <div class="today-weather">
       <div class="location weather-data">Location</div>
       <div class="date weather-data"></div>
       <div class="time weather-data"></div>
       <div class="current-weather-condition weather-data"></div>
+      <i class="weather-icon"></i>
       <div class="current-temperature temperature weather-data"></div>
       <div class="feels-like temperature weather-data"></div>
       <div class="humidity weather-data"></div>
@@ -18,9 +27,5 @@
       <div class="wind-speed weather-data"></div>
     </div>
     <div class="weather-forecast"></div>
-    <form action="">
-      <input type="" class="search-bar" />
-      <input type="submit" class="submit-button" />
-    </form>
   </body>
 </html>
