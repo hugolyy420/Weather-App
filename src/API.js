@@ -1,8 +1,13 @@
-// eslint-disable-next-line import/prefer-default-export
+/* eslint-disable camelcase */
+/* eslint-disable import/prefer-default-export */
+import * as dateFns from 'date-fns';
+
 export const APIManager = (() => {
-  const fetchWeatherData = async () => {
+  const fetchWeatherData = async (place) => {
+    const modifiedPlaceValue = place.toLowerCase().replace(/ /g, '+');
+    console.log(modifiedPlaceValue);
     const weatherForecastResponse = await fetch(
-      'https://api.weatherapi.com/v1/forecast.json?key=8aaac06ae0a3494f87b150612242303&q=hong+kong&days=3',
+      `https://api.weatherapi.com/v1/forecast.json?key=8aaac06ae0a3494f87b150612242303&q=${modifiedPlaceValue}&days=3`,
       { mode: 'cors' },
     );
     const weatherForecastData = await weatherForecastResponse.json();
@@ -10,19 +15,48 @@ export const APIManager = (() => {
     return weatherForecastData;
   };
 
-  const processWeatherData = (data) => {
-    console.log('start');
+  const formatNum = (data) => {
+    const formattedTemp = {};
+    for (const key in data) {
+      formattedTemp[key] = Math.round(data[key]);
+    }
+    return formattedTemp;
+  };
+
+  const formatDate = (tzid) => {
+    const dataCurrentTime = new Date().toLocaleString('en-US', {
+      timeZone: `${tzid}`,
+    });
+    const [datePart, timePart] = dataCurrentTime.split(', ');
+    const parsedDate = dateFns.parse(datePart, 'M/d/yyyy', new Date());
+    const parsedTime = dateFns.parse(timePart, 'h:mm:ss a', new Date());
+    const formattedDate = dateFns.format(parsedDate, 'EEEE dd MMMM yyyy');
+    const formattedTime = dateFns.format(parsedTime, 'HH:mm');
+    return { formattedDate, formattedTime };
+  };
+
+  const getDateWeekday = (dateString) => {
+    const parsedDate = dateFns.parseISO(dateString);
+    const weekday = dateFns.format(parsedDate, 'EEEE');
+    return weekday;
+  };
+
+  const processCurrentWeatherData = (data) => {
     const dataLocation = data.location.name;
-    const dataTodayDateAndTime = data.location.localtime;
-    const dataTodayDate = dataTodayDateAndTime.split(' ')[0];
-    const dataCurrentTime = dataTodayDateAndTime.split(' ')[1];
+    const dataCountry = data.location.country;
+    const formattedDataLocation = [dataLocation, dataCountry].join(', ');
+    const weatherCode = data.current.condition.code;
     const dataCurrentWeatherCondition = data.current.condition.text;
     const dataCurrentHumidity = data.current.humidity;
-    const dataCurrentWindSpeed = data.current.wind_kph;
+    const dataCurrentWindSpeed = Math.round(data.current.wind_kph);
     const dataCurrentChanceOfRain =
       data.forecast.forecastday[0].day.daily_chance_of_rain;
-    const { temp_c, temp_f } = data.current;
-    const { feelslike_c, feelslike_f } = data.current;
+    const { temp_c, feelslike_c } = data.current;
+    const object = { temp_c, feelslike_c };
+    const formattedTemp = formatNum(object);
+
+    const { tz_id } = data.location;
+    const { formattedDate, formattedTime } = formatDate(tz_id);
 
     // today
     // location, date and time, temperature(C and F), feels like(C & F)
@@ -36,8 +70,12 @@ export const APIManager = (() => {
         currentHumidity,
         currentWindSpeed,
         currentChanceOfRain,
-        currentTemperature,
-        currentFeelsLike,
+        // eslint-disable-next-line no-shadow
+        { temp_c },
+        // eslint-disable-next-line no-shadow
+        { feelslike_c },
+        // eslint-disable-next-line no-shadow
+        weatherCode,
       ) {
         this.location = location;
         this.todayDate = todayDate;
@@ -46,27 +84,58 @@ export const APIManager = (() => {
         this.currentHumidity = currentHumidity;
         this.currentWindSpeed = currentWindSpeed;
         this.currentChanceOfRain = currentChanceOfRain;
-        this.currentTemperature = currentTemperature;
-        this.currentFeelsLike = currentFeelsLike;
+        this.currentTemperature = temp_c;
+        this.currentFeelsLike = feelslike_c;
+        this.weatherCode = weatherCode;
       }
     }
 
     const currentWeatherDataObject = new CurrentWeatherData(
-      dataLocation,
-      dataTodayDate,
-      dataCurrentTime,
+      formattedDataLocation,
+      formattedDate,
+      formattedTime,
       dataCurrentWeatherCondition,
       dataCurrentHumidity,
       dataCurrentWindSpeed,
       dataCurrentChanceOfRain,
-      { temp_c, temp_f },
-      { feelslike_c, feelslike_f },
+      formattedTemp,
+      formattedTemp,
+      weatherCode,
     );
 
-    console.log(currentWeatherDataObject);
-    // forecast
-    // day, weather condition, max and min temperature, humidity, chance of rain
+    return currentWeatherDataObject;
   };
 
-  return { fetchWeatherData, processWeatherData };
+  const processForeCastWeatherData = (data) => {
+    const forecastWeatherDataArray = [];
+    const [, dayOne, dayTwo] = data.forecast.forecastday;
+    const forecastWeatherArray = [dayOne, dayTwo];
+    forecastWeatherArray.forEach((obj) => {
+      const { date } = obj;
+      const weekday = getDateWeekday(date);
+      const weatherCondition = obj.day.condition.text;
+      const { maxtemp_c, mintemp_c, daily_chance_of_rain } = obj.day;
+      const tempPair = formatNum({ maxtemp_c, mintemp_c });
+      const maxTemp = tempPair.maxtemp_c;
+      const minTemp = tempPair.mintemp_c;
+      const weatherCode = obj.day.condition.code;
+      const weatherDataObject = {
+        weekday,
+        weatherCondition,
+        maxTemp,
+        minTemp,
+        daily_chance_of_rain,
+        weatherCode,
+      };
+      forecastWeatherDataArray.push(weatherDataObject);
+    });
+
+    return forecastWeatherDataArray;
+  };
+
+  return {
+    fetchWeatherData,
+    processCurrentWeatherData,
+    processForeCastWeatherData,
+  };
 })();
