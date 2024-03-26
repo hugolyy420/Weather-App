@@ -12,7 +12,7 @@ const renderWeatherInfo = (data) => {
   const currentTemperature = document.querySelector('.current-temperature');
   const feelsLikeTemperature = document.querySelector('.feels-like');
   const currentHumidity = document.querySelector('.humidity');
-  const currentChanceOfRain = document.querySelector('.chance-of-rain');
+  const currentChanceOfRain = document.querySelector('.today-chance-of-rain');
   const currentWindSpeed = document.querySelector('.wind-speed');
 
   location.textContent = currentWeatherData.location;
@@ -25,6 +25,45 @@ const renderWeatherInfo = (data) => {
   currentHumidity.textContent = `${currentWeatherData.currentHumidity}%`;
   currentChanceOfRain.textContent = `${currentWeatherData.currentChanceOfRain}%`;
   currentWindSpeed.textContent = `${currentWeatherData.currentWindSpeed} kph`;
+
+  const forecastWeatherData = data[1];
+  forecastWeatherData.forEach((data) => {
+    const weatherForecastContainer =
+      document.querySelector('.weather-forecast');
+    const forecastDayContainer = document.createElement('div');
+    const weekday = document.createElement('div');
+    const maxTemperature = document.createElement('div');
+    const minTemperature = document.createElement('div');
+    const forecastWeatherCondition = document.createElement('div');
+    const forecastChanceOfRain = document.createElement('div');
+
+    forecastDayContainer.classList.add('forecast-day');
+    weekday.classList.add('weekday');
+    maxTemperature.classList.add('max-temp', 'temperature');
+    minTemperature.classList.add('min-temp', 'temperature');
+    forecastWeatherCondition.classList.add('weather-condition');
+    forecastChanceOfRain.classList.add('daily-chance-of-rain');
+
+    weekday.textContent = data.weekday;
+    maxTemperature.textContent = `${data.maxTemp}°C`;
+    minTemperature.textContent = `${data.minTemp}°C`;
+    forecastWeatherCondition.textContent = data.weatherCondition;
+    forecastChanceOfRain.textContent = `${data.daily_chance_of_rain}%`;
+
+    forecastDayContainer.append(
+      weekday,
+      maxTemperature,
+      minTemperature,
+      forecastWeatherCondition,
+      forecastChanceOfRain,
+    );
+    weatherForecastContainer.appendChild(forecastDayContainer);
+  });
+};
+
+const clearForeCastContainer = () => {
+  const weatherForecastContainer = document.querySelector('.weather-forecast');
+  weatherForecastContainer.textContent = '';
 };
 
 (function setEventListeners() {
@@ -40,6 +79,7 @@ const renderWeatherInfo = (data) => {
         APIManager.processCurrentWeatherData(weatherData),
         APIManager.processForeCastWeatherData(weatherData),
       ];
+      clearForeCastContainer();
       renderWeatherInfo(weatherDataArray);
       console.log(weatherDataArray);
     } catch (err) {
