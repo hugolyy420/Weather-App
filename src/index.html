@@ -3,29 +3,201 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <title>Weather App</title>
   </head>
   <header class="header">
-    <span>Weatherly</span> <i class="wi wi-day-sunny"></i>
-    <form action="">
-      <input type="" class="search-bar" />
-      <input type="submit" class="submit-button" />
-    </form>
-    <button class="celsius-fahrenheit">C/F</button>
+    <div class="header-logo">
+      <span>Weatherly</span> <i class="wi wi-day-sunny header-summer-logo"></i>
+    </div>
+    <div class="search-container">
+      <form action="" class="search-form">
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Enter City/Country"
+        />
+        <button class="search-button"><i class="fa fa-search"></i></button>
+      </form>
+    </div>
+    <div class="toggle-container">
+      <span>°C</span>
+      <label class="switch">
+        <input type="checkbox" class="temperature-toggler" />
+        <span class="slider round"></span>
+      </label>
+      <span>°F</span>
+    </div>
   </header>
   <body>
-    <div class="today-weather">
-      <div class="location weather-data">Location</div>
-      <div class="date weather-data"></div>
-      <div class="time weather-data"></div>
-      <div class="current-weather-condition weather-data"></div>
-      <i class="weather-icon"></i>
-      <div class="current-temperature temperature weather-data"></div>
-      <div class="feels-like temperature weather-data"></div>
-      <div class="humidity weather-data"></div>
-      <div class="today-chance-of-rain weather-data"></div>
-      <div class="wind-speed weather-data"></div>
+    <div class="err-container">
+      <div class="err-message"></div>
     </div>
-    <div class="weather-forecast"></div>
+    <div class="loading-spinner-container">
+      <i class="fa fa-refresh fa-spin loading-spinner"></i>
+      <div>Loading...</div>
+    </div>
+    <div class="location-date-container">
+      <div class="location weather-data"></div>
+      <div class="date-time-container">
+        <div class="date weather-data"></div>
+        <span>|</span>
+        <div class="time weather-data"></div>
+      </div>
+    </div>
+    <div class="weather-container">
+      <div class="top-weather-container">
+        <i class="current-weather-icon wi wi-cloud"></i>
+        <div class="current-temperature-container">
+          <div class="current-temperature temperature weather-data"></div>
+          <div class="current-weather-condition weather-data"></div>
+        </div>
+        <div class="today-temperatures-summary-container">
+          <div class="sub-heading">MAX</div>
+          <div class="today-max-temp-container">
+            <i class="wi wi-direction-up"></i>
+            <div class="temperature today-max-temp"></div>
+          </div>
+          <div class="sub-heading">MIN</div>
+          <div class="today-min-temp-container">
+            <i class="wi wi-direction-down"></i>
+            <div class="temperature today-min-temp"></div>
+          </div>
+          <div class="feels-like-container">
+            Feels like
+            <span class="feels-like temperature weather-data"></span>
+          </div>
+        </div>
+      </div>
+      <div class="current-weather-details-container">
+        <div class="sunrise-container">
+          <div class="detail-logo-container">
+            <i class="wi wi-sunrise detail-logo"></i>
+          </div>
+          <div class="small-details-container">
+            <div class="sub-heading">Sunrise</div>
+            <div class="sunrise"></div>
+          </div>
+        </div>
+        <div class="sun-set-container">
+          <div class="detail-logo-container">
+            <i class="wi wi-sunset detail-logo"></i>
+          </div>
+          <div class="small-details-container">
+            <div class="sub-heading">Sunset</div>
+            <div class="sunset"></div>
+          </div>
+        </div>
+        <div class="chance-of-rain-container">
+          <div class="detail-logo-container">
+            <i class="wi wi-umbrella detail-logo"></i>
+          </div>
+          <div class="small-details-container">
+            <div class="sub-heading">Chance of rain</div>
+            <div class="today-chance-of-rain weather-data"></div>
+          </div>
+        </div>
+        <div class="humidity-container">
+          <div class="detail-logo-container">
+            <i class="wi wi-humidity detail-logo"></i>
+          </div>
+          <div class="small-details-container">
+            <div class="sub-heading">Humidity</div>
+            <div class="humidity weather-data"></div>
+          </div>
+        </div>
+        <div class="wind-speed-container">
+          <div class="detail-logo-container">
+            <i class="wi wi-strong-wind detail-logo"></i>
+          </div>
+          <div class="small-details-container">
+            <div class="sub-heading">Wind Speed</div>
+            <div class="wind-speed weather-data"></div>
+          </div>
+        </div>
+        <div class="uv-index-container">
+          <div class="detail-logo-container">
+            <i class="wi wi-hot detail-logo"></i>
+          </div>
+          <div class="small-details-container">
+            <div class="sub-heading">UV index</div>
+            <div class="uv-index"></div>
+          </div>
+        </div>
+      </div>
+      <div class="forecast-heading">Next two days</div>
+      <div class="weather-forecast-container">
+        <div class="forecast-day">
+          <div class="weekday"></div>
+          <div class="forecast-details-container">
+            <div class="forecast-logo-container">
+              <i class="forecast-weather-icon wi wi-day-rain"></i>
+            </div>
+            <div class="forecast-details-small-container">
+              <div class="weather-condition"></div>
+              <div class="forecast-temperature-big-container">
+                <div class="forecast-temperature-medium-container">
+                  <div class="sub-heading forecast-max">MAX</div>
+                  <div class="forecast-temperature-container">
+                    <i class="wi wi-direction-up"></i>
+                    <div class="max-temp temperature"></div>
+                  </div>
+                </div>
+                <div class="forecast-temperature-medium-container">
+                  <div class="sub-heading forecast-min">MIN</div>
+                  <div class="forecast-temperature-container">
+                    <i class="wi wi-direction-down"></i>
+                    <div class="min-temp temperature"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="forecast-chance-of-rain-container">
+                <div class="forecast-chance-of-rain-icon-container">
+                  <i class="wi wi-umbrella"></i>
+                </div>
+                <div class="daily-chance-of-rain">%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="forecast-day">
+          <div class="weekday"></div>
+          <div class="forecast-details-container">
+            <div class="forecast-logo-container">
+              <i class="forecast-weather-icon wi wi-day-rain"></i>
+            </div>
+            <div class="forecast-details-small-container">
+              <div class="weather-condition"></div>
+              <div class="forecast-temperature-big-container">
+                <div class="forecast-temperature-medium-container">
+                  <div class="sub-heading forecast-max">MAX</div>
+                  <div class="forecast-temperature-container">
+                    <i class="wi wi-direction-up"></i>
+                    <div class="max-temp temperature"></div>
+                  </div>
+                </div>
+                <div class="forecast-temperature-medium-container">
+                  <div class="sub-heading forecast-min">MIN</div>
+                  <div class="forecast-temperature-container">
+                    <i class="wi wi-direction-down"></i>
+                    <div class="min-temp temperature"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="forecast-chance-of-rain-container">
+                <div class="forecast-chance-of-rain-icon-container">
+                  <i class="wi wi-umbrella"></i>
+                </div>
+                <div class="daily-chance-of-rain">%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
