@@ -34,9 +34,9 @@ import { APIManager } from './API';
   });
 
   async function displayWeatherinfo(event) {
+    domController.showLoadingSpinner();
     event.preventDefault();
     domController.hideErrorMessage();
-    domController.showLoadingSpinner();
     const placeValue = searchBar.value;
     try {
       if (placeValue === '') {

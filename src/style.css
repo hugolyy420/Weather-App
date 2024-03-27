@@ -127,6 +127,7 @@ body {
   align-items: center;
   padding: 0.4em 0.6em;
   border: 1px solid transparent;
+  transition: 0.5s;
 }
 
 .search-form:focus-within {
@@ -234,6 +235,8 @@ input:checked + .slider:before {
   color: #fff;
   font-size: 1.5rem;
   text-align: center;
+  line-height: 1.2;
+  margin-top: 1em;
 }
 
 .date-time-container {
@@ -380,12 +383,13 @@ input:checked + .slider:before {
 
 .weekday {
   color: #ffffff88;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
 }
 
 .forecast-details-container {
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
 }
 
 .forecast-logo-container {
@@ -538,7 +542,7 @@ input:checked + .slider:before {
     max-width: 500px;
   }
   .location-date-container {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
   }
   .current-weather-icon {
     font-size: 7rem;
